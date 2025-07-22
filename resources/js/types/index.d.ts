@@ -20,6 +20,8 @@ export interface NavItem {
     href: string;
     icon?: LucideIcon | null;
     isActive?: boolean;
+    role?: string[]; // Only show if user has one of these roles
+    permission?: string; // Only show if user has this permission
 }
 
 export interface SharedData {
@@ -39,5 +41,30 @@ export interface User {
     email_verified_at: string | null;
     created_at: string;
     updated_at: string;
-    [key: string]: unknown; // This allows for additional properties...
+    roles: Role[];
+    [key: string]: unknown;
 }
+
+export interface Project {
+    id: number;
+    name: string;
+    description: string;
+    priority: string;
+    start_date: string;
+    due_date: string;
+    assign_to: User;
+    status: string;
+    created_at: string;
+    updated_at: string;
+}
+export type TaskProps = {
+    task: string;
+    startDate: Date;
+    dueDate: Date;
+    user_id: string
+};
+export type Role = {
+    id: string;
+    name: string;
+    display_name: string
+};

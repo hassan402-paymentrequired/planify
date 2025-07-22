@@ -30,10 +30,20 @@ class AuthenticatedSessionController extends Controller
     public function store(LoginRequest $request): RedirectResponse
     {
         $request->authenticate();
-
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        $user = Auth::user()->load('roles');
+
+        // Role-based redirect
+        if ($user->hasAnyRole(['super_admin', 'cto', 'hr'])) {
+            return redirect()->route('admin.dashboard');
+        } elseif ($user->hasRole('project_manager')) {
+            return redirect()->route('project.manager.dashboard');
+        } elseif ($user->hasAnyRole(['frontend', 'backend', 'designer', 'user', 'action_officer'])) {
+            return redirect()->route('user.dashboard');
+        } else {
+            return redirect()->route('dashboard');
+        }
     }
 
     /**
