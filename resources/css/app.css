@@ -1,3 +1,6 @@
+/* @import url('https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&family=Share+Tech&display=swap'); */
+
+
 @import 'tailwindcss';
 
 @plugin 'tailwindcss-animate';
@@ -8,8 +11,8 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-    --font-sans:
-        'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-sans:"Share Tech", sans-serif;
+    --font-mono:"Jost", monospace;
 
     --radius-lg: var(--radius);
     --radius-md: calc(var(--radius) - 2px);

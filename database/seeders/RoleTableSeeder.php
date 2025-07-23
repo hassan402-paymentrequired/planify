@@ -15,16 +15,15 @@ class RoleTableSeeder extends Seeder
     public function run(): void
     {
         $roles = [
-            ['name' => 'super_admin', 'guard_name' => 'web', 'display_name' => 'Super Admin'],
-            ['name' => 'cto', 'guard_name' => 'web', 'display_name' => 'CTO'],
-            ['name' => 'hr', 'guard_name' => 'web', 'display_name' => 'HR'],
-            ['name' => 'project_manager', 'guard_name' => 'web', 'display_name' => 'Project Manager'],
-            ['name' => 'frontend', 'guard_name' => 'web', 'display_name' => 'Frontend Developer'],
-            ['name' => 'backend', 'guard_name' => 'web', 'display_name' => 'Backend Developer'],
-            ['name' => 'designer', 'guard_name' => 'web', 'display_name' => 'Designer'],
-            ['name' => 'admin', 'guard_name' => 'web', 'display_name' => 'Admin'],
-            ['name' => 'user', 'guard_name' => 'web', 'display_name' => 'User'],
-            ['name' => 'action_officer', 'guard_name' => 'web', 'display_name' => 'Action Officer'],
+            ['name' => 'super_admin', 'guard_name' => 'web', 'display_name' => 'Super Admin', 'is_administrative_role' => true],
+            ['name' => 'cto', 'guard_name' => 'web', 'display_name' => 'CTO', 'is_administrative_role' => true],
+            ['name' => 'hr', 'guard_name' => 'web', 'display_name' => 'HR', 'is_administrative_role' => true],
+            ['name' => 'project_manager', 'guard_name' => 'web', 'display_name' => 'Project Manager', 'is_administrative_role' => false],
+            ['name' => 'frontend', 'guard_name' => 'web', 'display_name' => 'Frontend Developer', 'is_administrative_role' => false],
+            ['name' => 'backend', 'guard_name' => 'web', 'display_name' => 'Backend Developer', 'is_administrative_role' => false],
+            ['name' => 'designer', 'guard_name' => 'web', 'display_name' => 'Designer', 'is_administrative_role' => false],
+            ['name' => 'action_officer', 'guard_name' => 'web', 'display_name' => 'Action Officer', 'is_administrative_role' => false],
+            ['name' => 'admin', 'guard_name' => 'web', 'display_name' => 'Admin', 'is_administrative_role' => false],
         ];
 
         $permissions = [

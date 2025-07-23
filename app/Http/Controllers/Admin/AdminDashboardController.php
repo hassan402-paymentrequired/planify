@@ -5,54 +5,73 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Project;
+use App\ProjectPrioriyEnum;
 use Spatie\Permission\Models\Role;
 use App\ProjectStatusEnum;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class AdminDashboardController extends Controller
 {
     public function index()
     {
-        $totalUsers = User::count();
         $totalProjects = Project::count();
-        $totalRoles = Role::count();
+        $ongoingProjects = Project::where('status', ProjectStatusEnum::IN_PROGRESS->value)->count();
+        $completedProjects = Project::where('status', ProjectStatusEnum::COMPLETED->value)->count();
+        $argentProjects = Project::where('priority', ProjectPrioriyEnum::CRITICAL->value)->count();
+        $unoccupiedStaff = User::whereHas('roles', function($query) {
+            $query->where('is_administrative_role', '=', false);
+        })->doesntHave('projects')->count();
+        $cancelledProjects = Project::where('status', ProjectStatusEnum::CANCELLED->value)->count();
+        $deactivatedProjects = Project::where('status', ProjectStatusEnum::DEACTIVATE->value)->count();
 
-        $managementRoles = ['super_admin', 'cto', 'hr'];
+        $users_projects = User::withCount([
+            'projects as ongoing_projects' => function($query) {
+                $query->where('status', ProjectStatusEnum::IN_PROGRESS->value);
+            },
+            'projects as completed_projects' => function($query) {
+                $query->where('status', ProjectStatusEnum::COMPLETED->value);
+            },
+            'projects as total_projects'
+        ])->whereHas('roles', function($query) {
+            $query->where('is_administrative_role', '=', false);
+        })->limit(3)->get();
 
-        // Get all users with their ongoing projects and roles
-        $users = User::with(['project' => function ($q) {
-            $q->where('status', ProjectStatusEnum::IN_PROGRESS->value);
-        }, 'roles'])->get();
+        $projectsPerDay = Project::selectRaw('DATE(created_at) as date, COUNT(*) as projects')
+            ->where('created_at', '>=', now()->subDays(30))
+            ->groupBy('date')
+            ->orderBy('date')
+            ->pluck('projects', 'date')
+            ->toArray();
 
-        $managementStaff = $users->filter(function ($user) use ($managementRoles) {
-            return $user->roles->pluck('name')->intersect($managementRoles)->isNotEmpty();
-        });
+        
+        $staffAssignedPerDay = DB::table('project_user')
+            ->selectRaw('DATE(created_at) as date, COUNT(DISTINCT user_id) as staff')
+            ->where('created_at', '>=', now()->subDays(30))
+            ->groupBy('date')
+            ->orderBy('date')
+            ->pluck('staff', 'date')
+            ->toArray();
 
-        $workingStaff = $users->filter(function ($user) use ($managementRoles) {
-            // Not management and has at least one ongoing project
-            return $user->roles->pluck('name')->intersect($managementRoles)->isEmpty()
-                && $user->project->isNotEmpty();
-        })->map(function ($user) {
-            $user->project_count = $user->project->count();
-            return $user;
-        });
-
-        $unoccupiedStaff = $users->filter(function ($user) use ($managementRoles) {
-            // Not management and has no ongoing project
-            return $user->roles->pluck('name')->intersect($managementRoles)->isEmpty()
-                && $user->project->isEmpty();
-        })->map(function ($user) {
-            $user->project_count = 0;
-            return $user;
-        });
+        $dates = collect(array_merge(array_keys($projectsPerDay), array_keys($staffAssignedPerDay)))->unique()->sort();
+        $projectsStaffChart = $dates->map(function($date) use ($projectsPerDay, $staffAssignedPerDay) {
+            return [
+                'date' => $date,
+                'projects' => $projectsPerDay[$date] ?? 0,
+                'staff' => $staffAssignedPerDay[$date] ?? 0,
+            ];
+        })->values();
 
         return Inertia::render('admin/dashboard', [
-            'totalUsers' => $totalUsers,
             'totalProjects' => $totalProjects,
-            'totalRoles' => $totalRoles,
-            'workingStaff' => $workingStaff->values(),
-            'managementStaff' => $managementStaff->values(),
-            'unoccupiedStaff' => $unoccupiedStaff->values(),
+            'ongoingProjects' => $ongoingProjects,
+            'completedProjects' => $completedProjects,
+            'argentProjects' => $argentProjects,
+            'unoccupiedStaff' => $unoccupiedStaff,
+            'cancelledProjects' => $cancelledProjects,
+            'deactivatedProjects' => $deactivatedProjects,
+            'users' => $users_projects,
+            'projectsStaffChart' => $projectsStaffChart,
         ]);
     }
 }

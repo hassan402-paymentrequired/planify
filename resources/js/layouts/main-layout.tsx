@@ -54,7 +54,7 @@ const MainLayout = ({ children, crumb }: PageLayoutProps) => {
              <Toaster />
             {children}</div>
         </main>
-        <AiChat />
+        {/* <AiChat /> */}
       </div>
     </div>
   );

@@ -24,7 +24,7 @@ class StoreProjectRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            'description' => ['required', 'string', 'max:400'],
+            'description' => ['required', 'string', 'max:800'],
             'assignee' => ['required', 'integer', 'exists:users,id'],
             'priority' => ['required', 'string'],
             'startDate' => ['nullable', 'date'],

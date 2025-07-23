@@ -100,7 +100,7 @@ const Sidebar = ({ className }: SidebarProps) => {
     return (
         <div className={cn('bg-sidebar flex h-full w-64 flex-col border-r p-4', className)}>
             <div className="flex items-center gap-2 px-2">
-                <div className="flex h-8 w-8 items-center justify-center rounded-md bg-[#0052CC]">
+                <div className="flex h-8 w-8 items-center justify-center rounded-md bg-[#0f6430]">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path
                             d="M15 22V15C15 13.8954 14.1046 13 13 13H11C9.89543 13 9 13.8954 9 15V22"
@@ -138,7 +138,7 @@ const Sidebar = ({ className }: SidebarProps) => {
 
             <div className="mt-6 space-y-1">
                 {filteredLinks.map((link) => (
-                    <Link key={link.href} href={link.href} className="repository-link" prefetch>
+                    <Link key={link.href} href={link.href} className="repository-link text-sm" prefetch>
                         {link.icon}
                         <span>{link.label}</span>
                     </Link>

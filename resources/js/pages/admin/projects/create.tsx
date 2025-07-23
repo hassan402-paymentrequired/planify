@@ -128,7 +128,7 @@ const Create = ({ admins, priorities, types }: { admins: Props[]; priorities: Pr
                                 onChange={setSelectedRoles}
                                 placeholder="Select options"
                             />
-                            <InputError message={errors.description} />
+                            <InputError message={errors.type} />
                         </div>
 
                         <div className="space-y-2">
