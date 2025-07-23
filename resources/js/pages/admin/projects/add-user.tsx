@@ -3,24 +3,18 @@ import UserTimeline from '@/components/project/user-timeline';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
-import ProjectLayout from '@/layouts/project/layout';
+import MainLayout from '@/layouts/main-layout';
 import { User } from '@/types';
 import { Search } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect,  useState } from 'react';
 
-type UserTimeLine = {
-    id: number;
-    start: string;
-    end: string;
-    isSupport?: boolean;
-};
+
 
 const AddUser = ({ project, users: userData, roles }) => {
-    const [allUsers, setAllUsers] = useState<User[]>(userData);
+    const [allUsers] = useState<User[]>(userData);
     const [users, setUsers] = useState<User[]>(userData);
     const [searchTerm, setSearchTerm] = useState('');
     const [filterType, setFilterType] = useState('');
-    const selectRef = useRef(null);
 
     useEffect(() => {
         let filtered = allUsers;
@@ -34,23 +28,17 @@ const AddUser = ({ project, users: userData, roles }) => {
     }, [searchTerm, filterType, allUsers]);
 
     // console.log(project);
-    const handleUserSelect = (id: string) => {
-        setUsers(() => {
-            const exist = tusers.find((user) => user.id.toString() === id);
-            if (exist) return;
-            return [...tusers, { id: id, start: '', end: '' }];
-        });
-    };
+  
     const clearFilterType = () => {
         setFilterType('');
     };
 
     return (
-        <ProjectLayout project={project}>
+        <MainLayout crumb={[{ title: 'dashboard', href: '/' }, { title: 'projects', href: '/' }, { title: project.name, href: '/' }]}>
             <div className="space-y-6">
                 <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
                     <div>
-                        <h1 className="text-3xl font-bold tracking-tight">Assign Users</h1>
+                        <h1 className="text-3xl font-bold tracking-tight">Assign Users to {project?.name}</h1>
                         <p className="text-muted-foreground">
                             select users you want to unboard on <span className="font-extrabold"> {project.name}</span>
                         </p>
@@ -84,7 +72,7 @@ const AddUser = ({ project, users: userData, roles }) => {
                 </div>
                 <UserTimeline users={users} project={project} />
             </div>
-        </ProjectLayout>
+        </MainLayout>
     );
 };
 

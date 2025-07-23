@@ -53,7 +53,7 @@ class ProjectController extends Controller
 
     public function show(Project $project)
     {
-        $project = $project->load('assignTo', 'types', 'users');
+        $project = $project->load('assignTo', 'types', 'users.roles');
         return Inertia::render('admin/projects/show', [
             'project' => $project,
             'status' => ProjectStatusEnum::toArray()
@@ -123,18 +123,17 @@ class ProjectController extends Controller
     public function addUser(Project $project)
     {
         authorize('assign.project');
+        $assignedUserIds = $project->users()->pluck('users.id')->toArray();
 
-        $project = $project->load('users');
-
-
-        $assignedUserIds = $project->users->pluck('id')->toArray();
-
-        $users = User::withoutRole(['admin', 'super_admin', 'cto', 'hr', 'project_manager'])
+        // Fetch users who are not already assigned to this project
+        $users = User::whereHas('roles', function ($query) {
+            $query->where('is_administrative_role', '=', false);
+        })
             ->whereNotIn('id', $assignedUserIds)
             ->with('roles')
             ->get();
 
-        $roles = ModelsRole::where('name', '!=', 'super_admin')->get();
+        $roles = ModelsRole::where('name', '!=', 'project_manager')->where('is_administrative_role', false)->get();
 
         return Inertia::render('admin/projects/add-user', [
             'project' => $project,

@@ -24,6 +24,7 @@ const UserTimeline = ({ users, project }: { users: User[]; project: Project }) =
     });
 
     const submit = (user_id: string) => {
+        console.log(data)
         setData('user_id', user_id);
         patch(route('projects.attach_user', { project: project?.id }), {
             onSuccess: (params_0) => {
@@ -41,6 +42,8 @@ const UserTimeline = ({ users, project }: { users: User[]; project: Project }) =
     const handleDateChange = (date: Date, label: string | null | any = null) => {
         setData(label, date);
     };
+
+    console.log(verrors, errors)
 
     return (
         <div className="mt-2 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
