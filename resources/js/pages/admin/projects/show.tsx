@@ -1,31 +1,40 @@
-import { ProjectBreadcrumb } from '@/components/project-bread-crumb';
 import Banner from '@/components/project/banner';
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import MainLayout from '@/layouts/main-layout';
-import ProjectLayout from '@/layouts/project/layout';
+import { BreadcrumbItem } from '@/types';
 
-const Show = ({ project, status }) => {
+const Show = ({ project }) => {
+    const breadcrumb: BreadcrumbItem[] = [
+        {
+            title: 'dashboard',
+            href: '/',
+        },
+        {
+            title: 'projects',
+            href: '/',
+        },
+        {
+            title: project.name,
+            href: '/',
+        },
+    ];
     console.log(project);
 
     return (
-        <MainLayout crumb={<ProjectBreadcrumb  />}>
-            <Banner project={project}  />
+        <MainLayout crumb={breadcrumb}>
+            <Banner project={project} />
             <Separator />
             <div className="mt-3">
-                <Tabs defaultValue="account">
+                <Tabs defaultValue="users">
                     <TabsList className="w-full">
-                        <TabsTrigger value="account">Tasks</TabsTrigger>
-                        <TabsTrigger value="projects">Issues</TabsTrigger>
+                        <TabsTrigger value="users">Users</TabsTrigger>
+                        <TabsTrigger value="issues">Issues</TabsTrigger>
                     </TabsList>
 
-                    <TabsContent value="tasks">
-                    
-                    </TabsContent>
+                    <TabsContent value="users"></TabsContent>
 
-                    <TabsContent value="issues">
-                       
-                    </TabsContent>
+                    <TabsContent value="issues"></TabsContent>
                 </Tabs>
             </div>
         </MainLayout>

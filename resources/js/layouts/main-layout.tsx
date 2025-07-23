@@ -6,11 +6,11 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { AssignTaskModal } from "@/components/modal/assign-task-modal";
 import { Toaster } from "@/components/ui/sonner";
-import AiChat from "@/components/modal/ai-chat";
+import { BreadcrumbItem } from "@/types";
 
 type PageLayoutProps = {
   children: React.ReactNode;
-  crumb?: React.ReactNode;
+  crumb: BreadcrumbItem[];
 };
 
 
@@ -24,10 +24,7 @@ const MainLayout = ({ children, crumb }: PageLayoutProps) => {
     setIsMobileSidebarOpen(!isMobileSidebarOpen);
   };
 
-  const handleClick = (e: React.MouseEvent) => {
-        e.stopPropagation();
-        setShowAssignTaskModal(false);
-    };
+
 
   return (
     <div className="flex h-screen w-full">
@@ -54,7 +51,6 @@ const MainLayout = ({ children, crumb }: PageLayoutProps) => {
              <Toaster />
             {children}</div>
         </main>
-        {/* <AiChat /> */}
       </div>
     </div>
   );

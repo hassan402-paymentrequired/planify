@@ -17,7 +17,7 @@ export const ProjectToggle: React.FC<AgentToggleProps> = ({ isActive, onToggle }
         className="data-[state=checked]:bg-brand-purple"
       />
       <span className={`text-sm font-medium ${isActive ? 'text-fg' : 'text-fg-muted'}`}>
-        {isActive ? 'In Progress' : 'Inactive'}
+        {isActive ? 'In Progress' : 'Deactivated'}
       </span>
     </div>
   );

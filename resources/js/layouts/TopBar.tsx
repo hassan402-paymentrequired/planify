@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { Breadcrumbs } from '@/components/breadcrumbs';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import {
@@ -9,23 +10,21 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Input } from '@/components/ui/input';
 import { useAppearance } from '@/hooks/use-appearance';
 import { useMobileNavigation } from '@/hooks/use-mobile-navigation';
-import { Link ,router} from '@inertiajs/react';
-import { Bell, GitBranch, Menu, Moon, Search, Sun } from 'lucide-react';
-import { ReactNode } from 'react';
-
+import { BreadcrumbItem } from '@/types';
+import { Link, router } from '@inertiajs/react';
+import { Bell, GitBranch, Menu, Moon, Sun } from 'lucide-react';
 
 type TopBarProps = {
     onMenuButtonClick: () => void;
     setShowAssignTaskModal: any;
-    crumb?: ReactNode
+    crumb: BreadcrumbItem[];
 };
 
-const TopBar = ({ onMenuButtonClick, setShowAssignTaskModal , crumb}: TopBarProps) => {
+const TopBar = ({ onMenuButtonClick, setShowAssignTaskModal, crumb }: TopBarProps) => {
     const { appearance: theme, updateAppearance: setTheme } = useAppearance();
-const cleanup = useMobileNavigation();
+    const cleanup = useMobileNavigation();
     const handleLogout = () => {
         cleanup();
         router.flushAll();
@@ -50,8 +49,12 @@ const cleanup = useMobileNavigation();
                 <Input type="search" placeholder="Search repositories..." className="pl-8" />
             </div> */}
 
-            {crumb && (
-                <div>{crumb}</div>
+            {crumb?.length > 1 && (
+                // <div className="border-sidebar-border/70 flex w-full border-b">
+                //     <div className="mx-auto flex h-12 w-full items-center justify-start px-4 text-neutral-500 md:max-w-7xl">
+                        <Breadcrumbs breadcrumbs={crumb} />
+                //     </div>
+                // </div>
             )}
 
             <div className="ml-auto flex items-center space-x-4">
@@ -63,11 +66,11 @@ const cleanup = useMobileNavigation();
                         </div>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent>
-                        <DropdownMenuItem> 
-                            <Link href='/mt/users/create'>New User</Link>
+                        <DropdownMenuItem>
+                            <Link href="/mt/users/create">New User</Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem>
-                              <Link href={route('projects.create')}>New Projects</Link>
+                            <Link href={route('projects.create')}>New Projects</Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={handleClick}>Assign Task</DropdownMenuItem>
                     </DropdownMenuContent>

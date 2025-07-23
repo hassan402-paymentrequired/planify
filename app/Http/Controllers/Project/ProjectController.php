@@ -62,10 +62,7 @@ class ProjectController extends Controller
 
     public function activateAndDeactivateProject(Project $project)
     {
-        $user = Auth::user();
-        if (!$user->can('edit.project')) {
-            abort(403, 'Unauthorized');
-        }
+        authorize('edit.project');
 
         $message = $project->status === ProjectStatusEnum::IN_PROGRESS->value
             ? 'Project deactivated successfully'
@@ -79,6 +76,18 @@ class ProjectController extends Controller
 
         $project->save();
         return back()->with('success', $message);
+    }
+
+    public function updateArchiveProject(Project $project)
+    {
+        authorize('edit.project');
+        if (ProjectStatusEnum::ON_HOLD->value === $project->status) {
+            $project->status = ProjectStatusEnum::IN_PROGRESS->value;
+        } else {
+            $project->status = ProjectStatusEnum::ON_HOLD->value;
+        }
+        $project->save();
+        return back()->with('success', 'Project archived successfully');
     }
 
     public function store(StoreProjectRequest $request)

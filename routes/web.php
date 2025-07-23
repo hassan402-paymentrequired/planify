@@ -55,6 +55,7 @@ Route::middleware(['auth', 'verified'])->prefix('mt')->group(function () {
         Route::get('/create', [ProjectController::class, 'create'])->name('projects.create');
         Route::post('/store', [ProjectController::class, 'store'])->name('projects.store');
         Route::patch('/status/{project}', [ProjectController::class, 'activateAndDeactivateProject'])->name('projects.status.update');
+        Route::patch('/archive/{project}', [ProjectController::class, 'updateArchiveProject'])->name('projects.archive.update');
         Route::get('/show/{project}', [ProjectController::class, 'show'])->name('projects.show');
         Route::get('/show/{project}/team', [ProjectController::class, 'team'])->name('projects.team');
         Route::get('/add-user/{project}', [ProjectController::class, 'addUser'])->name('projects.add_user');

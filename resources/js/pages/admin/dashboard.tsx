@@ -2,6 +2,7 @@ import { DashboardChartBar } from '@/components/dashboard/chart';
 import MiniCard from '@/components/dashboard/mini-card';
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import MainLayout from '@/layouts/main-layout';
+import { BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/react';
 import { ArrowUpRight } from 'lucide-react';
 
@@ -41,6 +42,13 @@ interface Props {
     projectsStaffChart: any[]
 }
 
+const breadcrumb: BreadcrumbItem[] = [
+    {
+        title: 'dashboard',
+        href: '/'
+    }
+]
+
 export default function AdminDashboard({
     totalProjects = 0,
     ongoingProjects = 0,
@@ -53,7 +61,7 @@ export default function AdminDashboard({
     projectsStaffChart
 }: Props) {
     return (
-        <MainLayout>
+        <MainLayout crumb={breadcrumb}>
             <Head title="Admin Dashboard" />
 
             <div className="grid gap-10 sm:grid-cols-2 md:grid-cols-3">

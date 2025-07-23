@@ -23,11 +23,16 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { User } from '@/types';
+import { BreadcrumbItem, User } from '@/types';
 import { OptionType } from '@/types/global';
 import { toast } from 'sonner';
 
-const randomNames = ['Aria', 'Mike', 'Yuki', 'Misty', 'Nova', 'Zephyr', 'Echo', 'Luna', 'Orion', 'Iris'];
+const breadcrumb: BreadcrumbItem[] = [
+    {
+        title: 'dashboard',
+        href: '/',
+    },
+];
 
 export default function Index({ projects }) {
     const [searchTerm, setSearchTerm] = useState('');
@@ -144,7 +149,7 @@ export default function Index({ projects }) {
     };
 
     return (
-        <MainLayout>
+        <MainLayout crumb={breadcrumb}>
             <Head title="Dashboard" />
 
             <div className="parent-dash mx-auto max-w-7xl space-y-8">
