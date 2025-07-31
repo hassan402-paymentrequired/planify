@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Inertia\Inertia;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -34,11 +35,14 @@ class PermissionController extends Controller
         return back();
     }
 
-    public function update(Request $request, $permissionId)
+    public function update(Request $request, Permission $permission, Role $role)
     {
-        $permission = Permission::findOrFail($permissionId);
-        $permission->display_name = $request->display_name;
-        $permission->save();
+        if ($role->hasPermissionTo($permission->name)) {
+            $role->revokePermissionTo($permission);
+        } else {
+            $role->givePermissionTo($permission);
+        }
+        Artisan::call('cache:forget spatie.permission.cache');
         return back();
     }
 

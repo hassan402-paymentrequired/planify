@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Project;
 use App\Models\ProjectIssue;
+use App\Models\ProjectUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -16,27 +17,26 @@ class UserDashboardController extends Controller
         $user = Auth::user();
 
         // All projects assigned to the user
-        $projects = $user->project()->with('users')->get();
+        $projects = $user->projects()->with(['assignTo', 'types', 'users.roles'])->get();
 
         // Analytics
         $totalProjects = $projects->count();
         $ongoingProjects = $projects->where('status', ProjectStatusEnum::IN_PROGRESS->value);
         $completedProjects = $projects->where('status', ProjectStatusEnum::COMPLETED->value);
 
-        // Ongoing projects with user's issues (tasks)
-        $ongoingProjectsWithTasks = $ongoingProjects->map(function ($project) use ($user) {
-            $tasks = ProjectIssue::where('project_id', $project->id)
-                ->where('assignee_id', $user->id)
-                ->get();
-            $project->user_tasks = $tasks;
-            return $project;
-        });
+        // tasks
+        $tasks = ProjectUser::where('user_id', $user->id)
+            ->with(['project', 'project.assignTo', 'project.types', 'project.users.roles'])
+            ->get();
+
+        // dd($tasks);
 
         return Inertia::render('user/dashboard', [
             'totalProjects' => $totalProjects,
             'ongoingProjectsCount' => $ongoingProjects->count(),
             'completedProjectsCount' => $completedProjects->count(),
-            'ongoingProjects' => $ongoingProjectsWithTasks,
+            'projects' => $projects,
+            'tasks' => $tasks,
         ]);
     }
 } 

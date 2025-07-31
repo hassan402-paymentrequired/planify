@@ -34,8 +34,12 @@ class AdminDashboardController extends Controller
             },
             'projects as total_projects'
         ])->whereHas('roles', function($query) {
-            $query->where('is_administrative_role', '=', false);
-        })->limit(3)->get();
+            $query->where('is_administrative_role', false);
+        })->get();
+
+
+
+
 
         $projectsPerDay = Project::selectRaw('DATE(created_at) as date, COUNT(*) as projects')
             ->where('created_at', '>=', now()->subDays(30))

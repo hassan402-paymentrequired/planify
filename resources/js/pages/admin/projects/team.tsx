@@ -45,7 +45,7 @@ const ProjectTeam = ({ project }) => {
                 </div>
             ) : (
                 <div className="mt-5 grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
-                    {project?.users?.map((user) => <ProjectUserCard user={user} />)}
+                    {project?.users?.map((user) => <ProjectUserCard user={user} project={project} />)}
                 </div>
             )}
         </>

@@ -283,7 +283,7 @@ const Banner = ({ project }) => {
                             </div>
                         </div>
 
-                        <ProjectChart />
+                        <ProjectChart project={project}/>
                     </div>
                 </CardContent>
             </div>

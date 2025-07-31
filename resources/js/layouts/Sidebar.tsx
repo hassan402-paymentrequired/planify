@@ -1,9 +1,8 @@
 import { Button } from '@/components/ui/button';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
 import { Link, usePage } from '@inertiajs/react';
-import { Folder, GitPullRequest, Inspect, LayoutDashboard, MessageCirclePlus, Settings, Shield, Users } from 'lucide-react';
+import { GitPullRequest, Inspect, LayoutDashboard, MessageCirclePlus, Settings, Shield, Users } from 'lucide-react';
 
 type SidebarProps = {
     className?: string;
@@ -30,15 +29,10 @@ const Sidebar = ({ className }: SidebarProps) => {
             label: 'Dashboard',
             icon: <LayoutDashboard size={18} />,
         },
-        {
-            href: '/mt/ask-ai',
-            label: 'Ask Noor',
-            icon: <MessageCirclePlus size={18} />,
-            permission: 'talk.ai',
-        },
+
         {
             href: '/mt/projects',
-            label: 'Project',
+            label: 'Projects',
             icon: <GitPullRequest size={18} />,
             permission: 'list.project',
         },
@@ -46,7 +40,7 @@ const Sidebar = ({ className }: SidebarProps) => {
             href: '/mt/users',
             label: 'User Management',
             icon: <Users size={18} />,
-            permission: 'view.user.management',
+            permission: 'list.user',
         },
         {
             href: '/admin/roles',
@@ -59,6 +53,12 @@ const Sidebar = ({ className }: SidebarProps) => {
             label: 'Permissions Management',
             icon: <Shield size={18} />,
             permission: 'view.permission.management',
+        },
+        {
+            href: '/mt/ask-ai',
+            label: 'Ask Noor',
+            icon: <MessageCirclePlus size={18} />,
+            permission: 'talk.ai',
         },
         // Admins see 'Issues', users with 'create.issue' see 'Create Issue'
         ...(roles.includes('super_admin') || roles.includes('cto') || roles.includes('hr')
@@ -86,16 +86,11 @@ const Sidebar = ({ className }: SidebarProps) => {
     ];
 
     const filteredLinks = sidebarLinks.filter((link) => {
-        if (link.role) {
-            return link.role.some((r: string) => roles.includes(r));
-        }
         if (link.permission) {
             return permissions.includes(link.permission);
         }
         return true;
     });
-
-   
 
     return (
         <div className={cn('bg-sidebar flex h-full w-64 flex-col border-r p-4', className)}>
@@ -160,8 +155,6 @@ const Sidebar = ({ className }: SidebarProps) => {
                     </svg>
                 </Button>
             </div>
-
-          
         </div>
     );
 };

@@ -72,6 +72,17 @@ const mockCommits = [
 ]
 
 
+const breadcrumb = [
+  {
+    title: 'dashboard',
+    href: '/'
+  },
+  {
+    title: 'issues',
+    href: '/admin/issues'
+  }
+]
+
 export default function Index() {
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedBranch, setSelectedBranch] = useState("all")
@@ -87,7 +98,7 @@ export default function Index() {
   }
 
   return (
-   <MainLayout>
+   <MainLayout crumb={breadcrumb}>
      <div className="flex-1 space-y-6 p-6">
       {/* Header */}
       <div className="flex items-center justify-between">

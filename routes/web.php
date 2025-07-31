@@ -3,21 +3,17 @@
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\AiController;
 use App\Http\Controllers\Admin\Users\UsersController;
+use App\Http\Controllers\Pm\PmController;
 use App\Http\Controllers\Project\ProjectController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/', function () {
-    return Inertia::render('welcome');
-    // return Inertia::render('flow/index');
-})->name('home');
+Route::redirect('/', '/login')->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/admin/dashboard', [\App\Http\Controllers\Admin\AdminDashboardController::class, 'index'])->name('admin.dashboard');
 
-    Route::get('/project-manager/dashboard', function () {
-        return Inertia::render('project-manager/dashboard');
-    })->name('project.manager.dashboard');
+    Route::get('/project-manager/dashboard', [PmController::class, 'index'])->name('project.manager.dashboard');
 
     Route::get('/user/dashboard', [\App\Http\Controllers\UserDashboardController::class, 'index'])->name('user.dashboard');
 
@@ -30,7 +26,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Permission management routes
     Route::get('/admin/permissions', [\App\Http\Controllers\Admin\PermissionController::class, 'index'])->name('permissions.index');
     Route::post('/admin/permissions', [\App\Http\Controllers\Admin\PermissionController::class, 'store'])->name('permissions.store');
-    Route::patch('/admin/permissions/{permission}', [\App\Http\Controllers\Admin\PermissionController::class, 'update'])->name('permissions.update');
+    Route::patch('/admin/permissions/{permission}/{role}', [\App\Http\Controllers\Admin\PermissionController::class, 'update'])->name('permissions.update');
     Route::delete('/admin/permissions/{permission}', [\App\Http\Controllers\Admin\PermissionController::class, 'destroy'])->name('permissions.destroy');
 });
 

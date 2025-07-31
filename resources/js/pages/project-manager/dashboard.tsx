@@ -1,48 +1,65 @@
-import { Head, Link } from '@inertiajs/react';
+import MainLayout from '@/layouts/main-layout';
+import { Head, usePage } from '@inertiajs/react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import UserProjects from '../user/projects';
+import { Project } from '@/types';
 
-export default function ProjectManagerDashboard() {
+const breadcrumb = [
+    { title: 'Dashboard', href: '/' },
+    { title: 'Project Manager Dashboard', href: '/mt/dashboard' },
+];
+
+interface Props {
+    totalProjects: number;
+    ongoingProjectsCount: number;
+    completedProjectsCount: number;
+    projects: Project[];
+    tasks: any[];
+}
+
+export default function ProjectManagerDashboard({ totalProjects = 0, ongoingProjectsCount = 0, completedProjectsCount = 0, projects = []}: Props) {
+    const {auth: {user}} = usePage().props;
     return (
-        <div className="p-8">
+        <MainLayout crumb={breadcrumb}>
             <Head title="Project Manager Dashboard" />
-            <h1 className="mb-6 text-3xl font-bold">Welcome, Project Manager!</h1>
-            <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2">
-                <div className="rounded bg-white p-4 shadow dark:bg-black/30">
-                    <h2 className="mb-2 text-lg font-semibold">Quick Links</h2>
-                    <ul className="space-y-2">
-                        <li>
-                            <Link href="/mt/projects" className="text-blue-600 hover:underline">
-                                My Projects
-                            </Link>
-                        </li>
-                        <li>
-                            <Link href="/mt/projects/create" className="text-blue-600 hover:underline">
-                                Create Project
-                            </Link>
-                        </li>
-                        <li>
-                            <Link href="/mt/users" className="text-blue-600 hover:underline">
-                                Team Members
-                            </Link>
-                        </li>
-                    </ul>
+                <div className="p-8">
+                    <Head title="User Dashboard" />
+                    <h1 className="mb-6 text-3xl font-bold">Welcome {user.name}!</h1>
+                    {/* Analytics */}
+                    <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-3">
+                        <div className="rounded bg-white p-4 shadow ring dark:bg-black/30">
+                            <h2 className="mb-2 text-lg font-semibold">Total Projects</h2>
+                            <div className="text-2xl font-bold">{totalProjects}</div>
+                        </div>
+                        <div className="rounded bg-white p-4 shadow ring dark:bg-black/30">
+                            <h2 className="mb-2 text-lg font-semibold">Ongoing Projects</h2>
+                            <div className="text-2xl font-bold">{ongoingProjectsCount}</div>
+                        </div>
+                        <div className="rounded bg-white p-4 shadow ring dark:bg-black/30">
+                            <h2 className="mb-2 text-lg font-semibold">Completed Projects</h2>
+                            <div className="text-2xl font-bold">{completedProjectsCount}</div>
+                        </div>
+                    </div>
+                    {/* Ongoing Projects List */}
+                    <div className="mt-3">
+                        <Tabs defaultValue="projects">
+                            <TabsList className="w-full">
+                                <TabsTrigger value="projects">Projects</TabsTrigger>
+                                <TabsTrigger value="tasks">Tasks</TabsTrigger>
+                                <TabsTrigger value="issues">Issues</TabsTrigger>
+                            </TabsList>
+
+                            <TabsContent value="projects">
+                                <UserProjects projects={projects} />
+                            </TabsContent>
+                            <TabsContent value="tasks">
+                                {/* <UserTasks tasks={tasks} /> */}
+                            </TabsContent>
+
+                            <TabsContent value="issues">i</TabsContent>
+                        </Tabs>
+                    </div>
                 </div>
-                <div className="rounded bg-white p-4 shadow dark:bg-black/30">
-                    <h2 className="mb-2 text-lg font-semibold">Active Projects</h2>
-                    <ul className="space-y-1">
-                        <li>Project Alpha (5 tasks in progress)</li>
-                        <li>Project Beta (2 tasks in review)</li>
-                        <li>Project Gamma (completed)</li>
-                    </ul>
-                </div>
-            </div>
-            <div className="mt-8">
-                <h2 className="mb-2 text-xl font-semibold">Team Overview</h2>
-                <ul className="list-disc pl-6 text-gray-700 dark:text-gray-300">
-                    <li>Jane Smith (Frontend Developer)</li>
-                    <li>Mike Johnson (Backend Developer)</li>
-                    <li>Lisa Brown (Designer)</li>
-                </ul>
-            </div>
-        </div>
+        </MainLayout>
     );
 }

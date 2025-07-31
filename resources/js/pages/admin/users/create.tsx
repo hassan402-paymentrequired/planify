@@ -19,10 +19,10 @@ type Role = {
 
 const Create = ({ roles }: { roles: Role[] }) => {
     const [openModal, setOpenModal] = useState(false);
-    const { data, setData, post, processing, reset, errors } = useForm<Required<{ name: string; email: string; phoneNumber: string; role: string }>>({
+    const { data, setData, post, processing, reset, errors } = useForm<Required<{ name: string; email: string; role: string, user_type: string }>>({
         name: '',
         email: '',
-        phoneNumber: '',
+        user_type: '',
         role: '',
     });
 
@@ -41,7 +41,7 @@ const Create = ({ roles }: { roles: Role[] }) => {
     };
 
     return (
-        <MainLayout>
+        <MainLayout crumb={[{ title: 'dashboard', href: '/' }, { title: 'users', href: route('users.index') }, { title: 'create', href: '' }]}>
             <div className="space-y-6 p-5">
                 <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                     <div>
@@ -84,17 +84,18 @@ const Create = ({ roles }: { roles: Role[] }) => {
 
                         <div className="space-y-2">
                             <Label htmlFor="dueDate" className="text-gray-800 dark:text-gray-300">
-                                Phone No
+                                User type
                             </Label>
-                            <Input
-                                id="dueDate"
-                                type="text"
-                                placeholder="Enter phone no"
-                                value={data.phoneNumber}
-                                onChange={(e) => setData('phoneNumber', e.target.value)}
-                                className="border-stone-800"
-                            />
-                            <InputError message={errors.phoneNumber} />
+                            <Select onValueChange={(e) => setData('user_type', e)}>
+                                <SelectTrigger className="border-stone-800">
+                                    <SelectValue placeholder="Select User Type" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value={'admin'}>Administrative User</SelectItem>
+                                    <SelectItem value={'user'}>Staff User</SelectItem>
+                                </SelectContent>
+                            </Select>
+                            <InputError message={errors.user_type} />
                         </div>
                     </div>
                     <div className="space-y-2">

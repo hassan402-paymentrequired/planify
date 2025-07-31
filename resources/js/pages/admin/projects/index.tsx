@@ -34,6 +34,27 @@ const breadcrumb: BreadcrumbItem[] = [
     },
 ];
 
+export  const getPriority = (name: string) => {
+        switch (name.toLowerCase()) {
+            case 'high':
+                return <Badge variant="secondary">{name}</Badge>;
+            case 'medium':
+                return <Badge variant="default">{name}</Badge>;
+            case 'critical':
+                return <Badge variant="destructive">{name}</Badge>;
+            default:
+                return <Badge variant="default">{name}</Badge>;
+        }
+    };
+
+      export  const getTimeElapseColor = (start: string, end: string | null) => {
+        if (end === null) return 'bg-gray-500';
+        const date = new Date(end).getTime() - new Date(start).getTime();
+        if (date >= 90 * 24 * 60 * 60 * 1000) return 'bg-red-500';
+        if (date >= 75 * 24 * 60 * 60 * 1000) return 'bg-yellow-500';
+        return 'bg-green-500';
+    };
+
 export default function Index({ projects }) {
     const [searchTerm, setSearchTerm] = useState('');
     const { patch } = useForm();
@@ -127,26 +148,9 @@ export default function Index({ projects }) {
         }
     };
 
-    const getTimeElapseColor = (start: string, end: string | null) => {
-        if (end === null) return 'bg-gray-500';
-        const date = new Date(end).getTime() - new Date(start).getTime();
-        if (date >= 90 * 24 * 60 * 60 * 1000) return 'bg-red-500';
-        if (date >= 75 * 24 * 60 * 60 * 1000) return 'bg-yellow-500';
-        return 'bg-green-500';
-    };
+ 
 
-    const getPriority = (name: string) => {
-        switch (name.toLowerCase()) {
-            case 'high':
-                return <Badge variant="secondary">{name}</Badge>;
-            case 'medium':
-                return <Badge variant="default">{name}</Badge>;
-            case 'critical':
-                return <Badge variant="destructive">{name}</Badge>;
-            default:
-                return <Badge variant="default">{name}</Badge>;
-        }
-    };
+  
 
     return (
         <MainLayout crumb={breadcrumb}>
@@ -185,6 +189,9 @@ export default function Index({ projects }) {
                         <h1 className="text-fg text-3xl font-semibold tracking-tight">Projects</h1>
                         <p className="text-fgMuted mt-1">Create, customize, and manage your projects all in one place</p>
                     </div>
+                     <Link href={route('projects.create')} className="brand-button mt-2">
+                                <Button>Create Your First Project</Button>
+                            </Link>
                 </div>
 
                 <Separator />
@@ -263,19 +270,6 @@ export default function Index({ projects }) {
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-                        <Link href={route('projects.create')} className="block">
-                            <Card className="card-hover border-agent-primary/30 hover:border-agent-primary/70 h-full border-2 border-dashed bg-transparent transition-all hover:bg-gray-50 dark:hover:bg-gray-900/30">
-                                <div className="flex h-full flex-col items-center justify-center py-10">
-                                    <div className="bg-agent-primary/10 mb-4 flex h-12 w-12 items-center justify-center rounded-full">
-                                        <PlusCircle className="text-agent-primary h-6 w-6" />
-                                    </div>
-                                    <h3 className="text-foreground text-lg font-medium dark:text-white">Create New Project</h3>
-                                    <p className="text-muted-foreground mt-2 max-w-xs text-center text-sm dark:text-gray-400">
-                                        Create a new project and start adding your tasks, or invite your team members to collaborate.
-                                    </p>
-                                </div>
-                            </Card>
-                        </Link>
 
                         {projects.map((project) => (
                             <Link href={route('projects.show', { project: project.id })} key={project.id} className="block">
@@ -283,13 +277,14 @@ export default function Index({ projects }) {
                                     <CardHeader className="px-2">
                                         <div className="flex items-start justify-between">
                                             <div className="flex items-center gap-3">
-                                                <Avatar className="h-12 w-12 border border-gray-200 dark:border-gray-800">
+                                                <Avatar className="h-12 w-12 border border-gray-200 dark:border-gray-800 rounded">
                                                     <AvatarImage
-                                                        src={`https://api.dicebear.com/7.x/bottts/svg?seed=${project.id}`}
+                                                        src={`http?seed=${project.id}`}
                                                         alt={project.name}
                                                     />
-                                                    <AvatarFallback>
-                                                        <UserCircle2 className="h-6 w-6" />
+                                                    <AvatarFallback className="rounded uppercase">
+                                                        {/* <UserCircle2 className="h-6 w-6" /> */}
+                                                        {project?.name?.substring(0,2)}
                                                     </AvatarFallback>
                                                 </Avatar>
                                                 <div>

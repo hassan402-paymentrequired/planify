@@ -39,13 +39,13 @@ class User extends Authenticatable
     }
 
 
-    public function projects(): HasMany
+    public function projectassigned(): HasMany
     {
         return $this->hasMany(Project::class, 'assign_to');
     }
 
 
-    public function project(): BelongsToMany
+    public function projects(): BelongsToMany
     {
         return $this->belongsToMany(Project::class)
             ->withPivot('start_date', 'end_date', 'purpose')
@@ -57,4 +57,12 @@ class User extends Authenticatable
         $this->loadMissing('roles');
         return collect($this->roles)->pluck('name') ?? [];
     }
+
+    public function firstRole()
+    {
+        $this->loadMissing('roles');
+        return $this->roles->first();
+        // $this->hasO
+    }
+
 }

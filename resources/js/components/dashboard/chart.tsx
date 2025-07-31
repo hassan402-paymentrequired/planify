@@ -36,8 +36,8 @@ export function DashboardChartBar({ chartData }) {
 
     const total = React.useMemo(
         () => ({
-            projects: chartData.reduce((acc, curr) => acc + curr.projects, 0),
-            staff: chartData.reduce((acc, curr) => acc + curr.staff, 0),
+            projects: chartData?.reduce((acc, curr) => acc + curr.projects, 0),
+            staff: chartData?.reduce((acc, curr) => acc + curr.staff, 0),
         }),
         [],
     );
@@ -61,7 +61,7 @@ export function DashboardChartBar({ chartData }) {
                             >
                                 <span className="text-muted-foreground text-xs">{chartConfig[chart].label}</span>
                                 <span className="text-lg leading-none font-bold sm:text-xl md:text-3xl">
-                                    {total[key as keyof typeof total].toLocaleString()}
+                                    {total[key as keyof typeof total]?.toLocaleString()}
                                 </span>
                             </button>
                         );
